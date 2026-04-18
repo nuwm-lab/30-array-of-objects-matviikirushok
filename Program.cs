@@ -1,95 +1,54 @@
+using LabWork;
 using System;
 
-class Triangle
+class Program
 {
-    public double SideA { get; set; }
-    public double SideB { get; set; }
-    public double SideC { get; set; }
-
-    public double AngleA { get; set; }
-    public double AngleB { get; set; }
-    public double AngleC { get; set; }
-    public void InputSides()
+    static void Main()
     {
-        Console.WriteLine("Введіть сторону a (усі сторони рівні):");
-        SideA = double.Parse(Console.ReadLine());
-        SideB = SideA;
-        SideC = SideA;
-
-
-        AngleA = AngleB = AngleC = 60;
-    }
-
-
-    public void Perimeter()
-    {
-        double P = SideA + SideB + SideC;
-        Console.WriteLine($"Периметр трикутника: {P}");
-    }
-
-
-    class Triangle1 : Triangle
-    {
-        public double angle { get; set; }
-
-
-        public void InputSide1()
+        try
         {
-            Console.WriteLine("Введіть сторону a:");
-            SideA = double.Parse(Console.ReadLine());
+            Console.Write("Enter the number of points (n): ");
+            int n = Convert.ToInt32(Console.ReadLine());
+
+            if (n <= 0) throw new Exception("Number of points must be positive.");
+
+            // 1. Створення масиву з n об’єктів класу
+            Point3D[] points = new Point3D[n];
+
+            for (int i = 0; i < n; i++)
+            {
+                Console.WriteLine($"\nEnter coordinates for Point #{i + 1}:");
+                Console.Write("X >>> "); double x = Convert.ToDouble(Console.ReadLine());
+                Console.Write("Y >>> "); double y = Convert.ToDouble(Console.ReadLine());
+                Console.Write("Z >>> "); double z = Convert.ToDouble(Console.ReadLine());
+
+                points[i] = new Point3D(x, y, z);
+            }
+
+            Console.WriteLine("\n--- Analysis Results ---");
+            bool found = false;
+
+            for (int i = 0; i < points.Length; i++)
+            {
+                // 2. Використання методу класу для перевірки умов
+                if (points[i].IsFirstOctantAndInteger())
+                {
+                    Console.WriteLine($"Point #{i + 1} {points[i]} is in the 1st Octant (all coordinates are positive).");
+                    found = true;
+                }
+            }
+
+            if (!found)
+            {
+                Console.WriteLine("No points were found in the 1st Octant.");
+            }
+        }
+        catch (Exception exc)
+        {
+            Console.WriteLine($"Error: {exc.Message}");
         }
 
-        public void InputAngle1()
-        {
-            Console.WriteLine("Введіть перший кут (A1):");
-            AngleA = double.Parse(Console.ReadLine());
-            Console.WriteLine("Введіть другий кут (B1):");
-            AngleB = double.Parse(Console.ReadLine());
-
-            AngleC = 180 - (AngleA + AngleB);
-        }
-
-
-        public void CalculateOtherSides()
-        {
-            double radA = AngleA * Math.PI / 180;
-            double radB = AngleB * Math.PI / 180;
-            double radC = AngleC * Math.PI / 180;
-
-            SideB = SideA * Math.Sin(radB) / Math.Sin(radA);
-            SideC = SideA * Math.Sin(radC) / Math.Sin(radA);
-        }
-
-
-        public void Perimeter1()
-        {
-            double P = SideA + SideB + SideC;
-            Console.WriteLine($"Периметр трикутника: {P}");
-        }
-
-        public void DisplayInfo1()
-        {
-            Console.WriteLine($"Сторони: a={SideA}, b={SideB}, c={SideC}");
-            Console.WriteLine($"Кути: A={AngleA}, B={AngleB}, C={AngleC}");
-        }
-    }
-
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("=== Рівносторонній трикутник ===");
-            Triangle t1 = new Triangle();
-            t1.InputSides();
-            t1.Perimeter();
-
-            Console.WriteLine("\n=== Трикутник із заданою стороною і двома кутами ===");
-            Triangle1 t2 = new Triangle1();
-            t2.InputSide1();
-            t2.InputAngle1();
-            t2.CalculateOtherSides();
-            t2.DisplayInfo1();
-            t2.Perimeter1();
-        }
+        Console.WriteLine("\nPress any key to exit...");
+        Console.ReadKey();
     }
 }
